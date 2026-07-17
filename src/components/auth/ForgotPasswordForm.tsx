@@ -58,13 +58,13 @@ const ForgotPasswordForm = () => {
     <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 w-full border border-gray-100">
       {/* Brand */}
       <div className="text-center mb-1">
-        <span className="text-lg font-bold text-emerald-600">Smart</span>
-        <span className="text-lg font-bold text-teal-500"> Rwanda</span>
+        <span className="text-lg font-bold text-green-800">Smart</span>
+        <span className="text-lg font-bold text-green-700"> Rwanda</span>
         <span className="text-xs text-gray-400 block">Tourism Marketplace</span>
       </div>
 
       {/* Heading */}
-      <h1 className="text-3xl font-extrabold text-center mt-10 mb-2 tracking-tight bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-extrabold text-center mt-10 mb-2 tracking-tight bg-gradient-to-r from-green-800 to-green-600 bg-clip-text text-transparent">
         Forgot Password?
       </h1>
       <p className="text-center text-gray-500 mb-8 text-sm leading-relaxed">
@@ -134,8 +134,8 @@ const ForgotPasswordForm = () => {
             className={`w-full py-3.5 px-4 rounded-xl text-white font-medium text-sm transition-all duration-200 ${
               isLoading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-md shadow-emerald-200 hover:shadow-lg hover:shadow-emerald-300/50 transform hover:-translate-y-0.5'
-            } focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                : 'bg-green-800 hover:bg-green-900 shadow-md shadow-green-200 hover:shadow-lg transform hover:-translate-y-0.5'
+            } focus:outline-none focus:ring-2 focus:ring-green-800 focus:ring-offset-2`}
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">
@@ -157,7 +157,7 @@ const ForgotPasswordForm = () => {
       <div className="mt-8 text-center">
         <Link
           to="/login"
-          className="text-sm text-gray-500 hover:text-emerald-600 transition-colors duration-200 inline-flex items-center gap-1.5 group"
+          className="text-sm text-gray-500 hover:text-green-800 transition-colors duration-200 inline-flex items-center gap-1.5 group"
         >
           <svg className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
