@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { ForgotPasswordFormState } from '../../types/auth';
 
 const ForgotPasswordForm = () => {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [touched, setTouched] = useState(false);
+  const [state, setState] = useState<ForgotPasswordFormState>({
+    email: '',
+    emailError: '',
+    isLoading: false,
+    successMessage: '',
+    touched: false,
+  });
+  const { email, emailError, isLoading, successMessage, touched } = state;
 
   // Email validation
   const validateEmail = (value: string) => {
@@ -22,35 +26,30 @@ const ForgotPasswordForm = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setEmail(value);
-    if (touched) {
-      setEmailError(validateEmail(value));
-    }
+    setState(prev => ({
+      ...prev,
+      email: value,
+      emailError: prev.touched ? validateEmail(value) : '',
+    }));
   };
 
   const handleBlur = () => {
-    setTouched(true);
-    setEmailError(validateEmail(email));
+    setState(prev => ({ ...prev, touched: true, emailError: validateEmail(prev.email) }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const error = validateEmail(email);
-    setEmailError(error);
-    setTouched(true);
-    if (error) {
-      return;
-    }
-
-    // Simulate API call
-    setIsLoading(true);
-
+    setState(prev => ({ ...prev, emailError: error, touched: true }));
+    if (error) return;
+    setState(prev => ({ ...prev, isLoading: true }));
     // TODO: Replace with real API call to POST /api/auth/forgot-password
     setTimeout(() => {
-      setIsLoading(false);
-      setSuccessMessage(
-        'If an account with this email exists, a password reset link has been sent. Please check your email.'
-      );
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        successMessage: 'If an account with this email exists, a password reset link has been sent. Please check your email.',
+      }));
     }, 2000);
   };
 

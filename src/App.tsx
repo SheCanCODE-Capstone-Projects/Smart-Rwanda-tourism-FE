@@ -1,20 +1,13 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ForgotPassword from './pages/ForgotPassword';
-
-// NOTE: Other routes are managed by other team members.
-// This App.tsx only includes the Forgot Password route for demonstration.
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ForgotPassword, ResetPassword } from './pages';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
+        <Route path="/" element={<Navigate to="/forgot-password" replace />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* Other routes will be added by other team members:
-        <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        */}
       </Routes>
     </Router>
   );
