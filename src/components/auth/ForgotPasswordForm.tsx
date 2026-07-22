@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { ForgotPasswordFormState } from '../../types/auth';
 
+/**
+ * ForgotPasswordForm component.
+ * Renders a form that allows users to request a password reset link via email.
+ */
 const ForgotPasswordForm = () => {
   const [state, setState] = useState<ForgotPasswordFormState>({
     email: '',
@@ -12,7 +16,11 @@ const ForgotPasswordForm = () => {
   });
   const { email, emailError, isLoading, successMessage, touched } = state;
 
-  // Email validation
+  /**
+   * Validates the email input value.
+   * @param value - The email string to validate.
+   * @returns An error message string, or empty string if valid.
+   */
   const validateEmail = (value: string) => {
     if (!value) {
       return 'Email is required';
@@ -24,6 +32,10 @@ const ForgotPasswordForm = () => {
     return '';
   };
 
+  /**
+   * Handles changes to the email input field.
+   * @param e - The input change event.
+   */
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setState(prev => ({
@@ -33,10 +45,17 @@ const ForgotPasswordForm = () => {
     }));
   };
 
+  /**
+   * Marks the email field as touched and triggers validation on blur.
+   */
   const handleBlur = () => {
     setState(prev => ({ ...prev, touched: true, emailError: validateEmail(prev.email) }));
   };
 
+  /**
+   * Handles form submission, validates the email and triggers the API call.
+   * @param e - The form submit event.
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const error = validateEmail(email);

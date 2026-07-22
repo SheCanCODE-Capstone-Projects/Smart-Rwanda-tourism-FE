@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { ResetPasswordFormState, ResetPasswordErrors, ResetPasswordTouched } from '../../types/auth';
 
+/**
+ * ResetPasswordForm component.
+ * Renders a form for setting a new password using a token from the URL query params.
+ * Shows an invalid-link state if no token is present.
+ */
 const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
@@ -14,18 +19,33 @@ const ResetPasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  /**
+   * Validates the password field.
+   * @param value - The password string to validate.
+   * @returns An error message string, or empty string if valid.
+   */
   const validatePassword = (value: string) => {
     if (!value) return 'Password is required';
     if (value.length < 8) return 'Password must be at least 8 characters';
     return '';
   };
 
+  /**
+   * Validates the confirm password field.
+   * @param value - The confirm password string.
+   * @param password - The original password to compare against.
+   * @returns An error message string, or empty string if valid.
+   */
   const validateConfirm = (value: string, password: string) => {
     if (!value) return 'Please confirm your password';
     if (value !== password) return 'Passwords do not match';
     return '';
   };
 
+  /**
+   * Handles changes to password or confirm password input fields.
+   * @param e - The input change event.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const updated = { ...form, [name]: value };
@@ -38,6 +58,10 @@ const ResetPasswordForm = () => {
     }
   };
 
+  /**
+   * Marks the field as touched and triggers validation on blur.
+   * @param e - The focus event.
+   */
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name } = e.target;
     setTouched(prev => ({ ...prev, [name]: true }));
@@ -47,6 +71,10 @@ const ResetPasswordForm = () => {
     });
   };
 
+  /**
+   * Handles form submission, validates both fields and triggers the reset API call.
+   * @param e - The form submit event.
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors = {
