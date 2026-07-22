@@ -12,6 +12,8 @@ dist
 dist-ssr
 coverage
 .env.local
+.env.development
+.env.production
 *.local
 
 # Editor directories and files
