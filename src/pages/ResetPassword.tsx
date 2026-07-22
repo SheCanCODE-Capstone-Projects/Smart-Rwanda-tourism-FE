@@ -12,27 +12,25 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [touched, setTouched] = useState(false)
 
-  const passwordsMatch = password.length > 0 && password === confirmPassword
   const passwordLongEnough = password.length >= 8
+  const passwordsMatch = password.length > 0 && password === confirmPassword
+  const formValid = passwordLongEnough && passwordsMatch
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setErrorMessage('')
+    setTouched(true)
 
     if (!token) {
       setStatus('error')
       setErrorMessage('This reset link is invalid or has expired. Please request a new one.')
       return
     }
-    if (!passwordLongEnough) {
+    if (!formValid) {
       setStatus('error')
-      setErrorMessage('Password must be at least 8 characters long.')
-      return
-    }
-    if (!passwordsMatch) {
-      setStatus('error')
-      setErrorMessage('Passwords do not match.')
+      setErrorMessage(!passwordLongEnough ? 'Password must be at least 8 characters long.' : 'Passwords do not match.')
       return
     }
 
@@ -73,13 +71,20 @@ function ResetPassword() {
                   name="password"
                   type="password"
                   autoComplete="new-password"
+                  autoFocus
                   required
                   minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onBlur={() => setTouched(true)}
                   placeholder="At least 8 characters"
-                  className="mt-1.5 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-emerald-500 focus:ring-emerald-500 ${
+                    touched && !passwordLongEnough ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 />
+                {touched && !passwordLongEnough && (
+                  <p className="mt-1 text-xs text-red-600">Must be at least 8 characters.</p>
+                )}
               </div>
 
               <div>
@@ -94,14 +99,20 @@ function ResetPassword() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  onBlur={() => setTouched(true)}
                   placeholder="Re-enter your new password"
-                  className="mt-1.5 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-emerald-500 focus:ring-emerald-500 ${
+                    touched && confirmPassword.length > 0 && !passwordsMatch ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 />
+                {touched && confirmPassword.length > 0 && !passwordsMatch && (
+                  <p className="mt-1 text-xs text-red-600">Passwords do not match.</p>
+                )}
               </div>
 
               <button
                 type="submit"
-                disabled={status === 'loading'}
+                disabled={status === 'loading' || (touched && !formValid)}
                 className="w-full rounded-lg bg-emerald-600 text-white text-sm font-medium py-2.5 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {status === 'loading' ? 'Resetting...' : 'Reset password'}
