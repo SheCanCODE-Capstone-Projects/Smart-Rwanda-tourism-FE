@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ForgotPassword, ResetPassword, LoginPage, RegisterPage } from './pages';
+import { ForgotPassword, ResetPassword, LoginPage, RegisterPage, TripPlanner, TripPackageDetail } from './pages';
 
 function App() {
   return (
@@ -10,6 +10,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/trip-planner" element={<TripPlanner />} />
+        <Route path="/trip-packages/:id" element={<TripPackageDetail />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
