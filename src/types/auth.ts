@@ -1,26 +1,55 @@
-/** State shape for the ForgotPasswordForm component. */
-export interface ForgotPasswordFormState {
-  email: string;
-  emailError: string;
-  isLoading: boolean;
-  successMessage: string;
-  touched: boolean;
+//  Auth TypeScript Interfaces 
+
+export type UserRole = 'tourist' | 'provider'
+
+export interface LoginFormData {
+  email: string
+  password: string
 }
 
-/** State shape for the ResetPasswordForm fields. */
-export interface ResetPasswordFormState {
-  password: string;
-  confirmPassword: string;
+export interface RegisterFormData {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  confirmPassword: string
+  role: UserRole
 }
 
-/** Validation error messages for the ResetPasswordForm. */
-export interface ResetPasswordErrors {
-  password: string;
-  confirmPassword: string;
+export interface FieldError {
+  message: string
 }
 
-/** Tracks which fields in ResetPasswordForm have been touched by the user. */
-export interface ResetPasswordTouched {
-  password: boolean;
-  confirmPassword: boolean;
+export type LoginFormErrors = Partial<Record<keyof LoginFormData, string>>
+export type RegisterFormErrors = Partial<Record<keyof RegisterFormData, string>>
+
+// API request / response shapes
+
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+export interface RegisterRequest {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  role: UserRole
+}
+
+export interface AuthResponse {
+  token: string
+  refreshToken?: string
+  userId?: string | number
+  email?: string
+  firstName?: string
+  lastName?: string
+  role?: UserRole
+}
+
+export interface ApiError {
+  message: string
+  errors?: Record<string, string>
+  status?: number
 }
