@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/discover', label: 'Discover' },
   { href: '/marketplace', label: 'Marketplace' },
+  { href: '/trip-planner', label: 'Trip Planner' },
   { href: '/booking', label: 'Booking' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -20,6 +21,7 @@ function isActive(pathname: string, href: string) {
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const pathname = useLocation().pathname;
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export function Navbar() {
 
   useEffect(() => {
     setMenuOpen(false);
+    setAccountOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -94,27 +97,51 @@ export function Navbar() {
 
       <div className="hidden items-center gap-4 lg:flex">
         {user ? (
-          <>
-            <Link
-              to="/marketplace"
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setAccountOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={accountOpen}
               className={cn(
                 'text-sm font-semibold transition-colors',
                 scrolled ? 'text-text' : 'text-white'
               )}
             >
-              {displayName(user)}
-            </Link>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className={cn(
-                'text-sm font-medium transition-opacity hover:opacity-65',
-                scrolled ? 'text-text' : 'text-white/90'
-              )}
-            >
-              Logout
+              {displayName(user)} ▾
             </button>
-          </>
+            {accountOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-border bg-white py-2 shadow-lg"
+              >
+                <Link
+                  to="/marketplace"
+                  role="menuitem"
+                  className="block px-4 py-2 text-sm text-text hover:bg-bg"
+                >
+                  My Profile
+                </Link>
+                {user.role === 'provider' && (
+                  <Link
+                    to="/provider/dashboard"
+                    role="menuitem"
+                    className="block px-4 py-2 text-sm font-semibold text-text hover:bg-bg"
+                  >
+                    Provider Dashboard
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleLogout}
+                  className="block w-full px-4 py-2 text-left text-sm text-text hover:bg-bg"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <Link
             to="/login"
@@ -169,6 +196,14 @@ export function Navbar() {
               <Link to="/marketplace" className="rounded-lg px-3 py-3 font-semibold text-text hover:bg-bg">
                 {displayName(user)}
               </Link>
+              {user.role === 'provider' && (
+                <Link
+                  to="/provider/dashboard"
+                  className="rounded-lg px-3 py-3 font-semibold text-forest hover:bg-bg"
+                >
+                  Provider Dashboard
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}
