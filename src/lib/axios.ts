@@ -18,9 +18,17 @@ api.interceptors.response.use(
   (res: any) => res,
   (err: any) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('admin_user')
-      window.location.href = '/admin/login'
+      const onAdminRoute = window.location.pathname.startsWith('/admin')
+      if (onAdminRoute) {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('admin_user')
+        window.location.href = '/admin/login'
+      } else {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('rw_session_user')
+        window.dispatchEvent(new Event('rw-auth-change'))
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(err)
   }

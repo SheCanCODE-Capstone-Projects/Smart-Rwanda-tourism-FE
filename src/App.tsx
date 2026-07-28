@@ -8,6 +8,10 @@ import MarketplacePage from '@/pages/MarketplacePage';
 import BusinessDetailsPage from '@/pages/BusinessDetailsPage';
 import BookingPage from '@/pages/BookingPage';
 import BookingLandingPage from '@/pages/BookingLandingPage';
+import TripPlanner from '@/pages/TripPlanner';
+import TripPackageDetail from '@/pages/TripPackageDetail';
+import ProviderDashboard from '@/pages/ProviderDashboard';
+import ProviderRoute from '@/components/auth/ProviderRoute';
 import { NotFoundPanel } from '@/components/ui/NotFoundPanel';
 
 // Auth Pages
@@ -61,8 +65,18 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/marketplace" element={<MarketplacePage />} />
         <Route path="/business/:id" element={<BusinessDetailsPage />} />
+        <Route path="/trip-planner" element={<TripPlanner />} />
+        <Route path="/trip-planner/:id" element={<TripPackageDetail />} />
         <Route path="/booking" element={<BookingLandingPage />} />
         <Route path="/booking/:id" element={<BookingPage />} />
+        <Route
+          path="/provider/dashboard"
+          element={
+            <ProviderRoute>
+              <ProviderDashboard />
+            </ProviderRoute>
+          }
+        />
         <Route
           path="*"
           element={<NotFoundPanel title="Page not found." message="The page you're looking for doesn't exist or has moved." />}
