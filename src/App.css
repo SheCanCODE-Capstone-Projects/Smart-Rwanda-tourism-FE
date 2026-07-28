@@ -1,0 +1,3 @@
+/* Obsolete default Vite/React starter styles removed during production cleanup.
+   All active styling for RwandaWays lives in index.css (Tailwind + brand utility
+   classes) and Tailwind utility classes used directly in components. */

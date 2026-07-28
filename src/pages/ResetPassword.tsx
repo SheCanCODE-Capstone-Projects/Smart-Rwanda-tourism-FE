@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { resetPassword } from '@/services/authService'
+import BrandLogo from '@/components/auth/BrandLogo'
 
 function ResetPassword() {
   const [searchParams] = useSearchParams()
@@ -46,14 +47,17 @@ function ResetPassword() {
   }
 
   return (
-    <div className="min-h-svh flex items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="min-h-svh flex flex-col items-center justify-center bg-bg px-4 py-12">
+      <div className="mb-8">
+        <BrandLogo dark />
+      </div>
       <div className="w-full max-w-sm">
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
-          <h1 className="text-2xl font-semibold text-gray-900">Set a new password</h1>
-          <p className="mt-2 text-sm text-gray-500">Choose a new password for your account.</p>
+        <div className="bg-white border border-border rounded-2xl shadow-card p-8">
+          <h1 className="text-h3 text-text">Set a new password</h1>
+          <p className="mt-2 text-sm text-muted">Choose a new password for your account.</p>
 
           {status === 'success' ? (
-            <div role="status" className="mt-6 rounded-lg bg-emerald-50 text-emerald-800 text-sm px-4 py-3">
+            <div role="status" className="mt-6 rounded-lg bg-sage/10 text-forest text-sm px-4 py-3">
               Your password has been reset. Redirecting you to login...
             </div>
           ) : !token ? (
@@ -63,7 +67,7 @@ function ResetPassword() {
           ) : (
             <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-sm font-medium text-text">
                   New password
                 </label>
                 <input
@@ -78,8 +82,8 @@ function ResetPassword() {
                   onChange={(e) => setPassword(e.target.value)}
                   onBlur={() => setTouched(true)}
                   placeholder="At least 8 characters"
-                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-emerald-500 focus:ring-emerald-500 ${
-                    touched && !passwordLongEnough ? 'border-red-300' : 'border-gray-300'
+                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:border-forest focus:ring-lime ${
+                    touched && !passwordLongEnough ? 'border-red-300' : 'border-border'
                   }`}
                 />
                 {touched && !passwordLongEnough && (
@@ -88,7 +92,7 @@ function ResetPassword() {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-text">
                   Confirm new password
                 </label>
                 <input
@@ -101,8 +105,8 @@ function ResetPassword() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onBlur={() => setTouched(true)}
                   placeholder="Re-enter your new password"
-                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:border-emerald-500 focus:ring-emerald-500 ${
-                    touched && confirmPassword.length > 0 && !passwordsMatch ? 'border-red-300' : 'border-gray-300'
+                  className={`mt-1.5 block w-full rounded-lg border px-3 py-2 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:border-forest focus:ring-lime ${
+                    touched && confirmPassword.length > 0 && !passwordsMatch ? 'border-red-300' : 'border-border'
                   }`}
                 />
                 {touched && confirmPassword.length > 0 && !passwordsMatch && (
@@ -113,7 +117,7 @@ function ResetPassword() {
               <button
                 type="submit"
                 disabled={status === 'loading' || (touched && !formValid)}
-                className="w-full rounded-lg bg-emerald-600 text-white text-sm font-medium py-2.5 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                className="w-full rounded-lg bg-forest text-white text-sm font-medium py-2.5 hover:bg-forest/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {status === 'loading' ? 'Resetting...' : 'Reset password'}
               </button>
@@ -128,7 +132,7 @@ function ResetPassword() {
 
           <Link
             to="/login"
-            className="mt-6 inline-block text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
+            className="mt-6 inline-block text-sm text-lake hover:text-forest hover:underline"
           >
             Back to login
           </Link>

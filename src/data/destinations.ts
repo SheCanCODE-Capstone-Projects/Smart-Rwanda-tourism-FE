@@ -1,0 +1,55 @@
+import { Destination } from '@/types';
+import { cloudinaryImages } from './cloudinaryImages';
+
+export const destinations: Destination[] = [
+  {
+    id: 'kigali',
+    name: 'Kigali City',
+    eyebrow: 'Kigali',
+    time: 'Starting point',
+    desc: "Rwanda's capital — your natural hub between adventures, with contemporary art, memorial sites and the country's best coffee shops.",
+    tags: ['City Tours', 'Genocide Memorial', 'Art Galleries', 'Nightlife'],
+    nearby: 'Nearby: Gloria Hotel, Isombe House',
+    photo: cloudinaryImages.destinations.kigali,
+  },
+  {
+    id: 'volcanoes',
+    name: 'Volcanoes National Park',
+    eyebrow: 'Musanze',
+    time: '~2.5 hrs from Kigali',
+    desc: 'Home to endangered mountain gorillas and golden monkeys, set against five dramatic volcanic peaks.',
+    tags: ['Gorilla Trekking', 'Golden Monkeys', 'Volcano Hikes'],
+    nearby: 'Nearby: Amber Hills Lodge, Golden Monkey Tours',
+    photo: cloudinaryImages.destinations.volcanoes,
+  },
+  {
+    id: 'akagera',
+    name: 'Akagera National Park',
+    eyebrow: 'Eastern Province',
+    time: '~2.5–3 hrs from Kigali',
+    desc: 'Savanna plains and papyrus swamps, home to lions, rhinos, elephants and the rest of the Big Five.',
+    tags: ['Game Drives', 'Boat Safari', 'Big Five'],
+    nearby: 'Nearby: Akagera Safari Co.',
+    photo: cloudinaryImages.destinations.akagera,
+  },
+  {
+    id: 'nyungwe',
+    name: 'Nyungwe Forest',
+    eyebrow: 'Southern Province',
+    time: '~5–6 hrs from Kigali',
+    desc: "One of Africa's oldest rainforests, with chimpanzee tracking and a canopy walk 60 metres above the forest floor.",
+    tags: ['Chimp Tracking', 'Canopy Walk', 'Birdwatching'],
+    nearby: 'Nearby: Emmanuel N. — Guide',
+    photo: cloudinaryImages.destinations.nyungwe,
+  },
+  {
+    id: 'lake-kivu',
+    name: 'Lake Kivu',
+    eyebrow: 'Rubavu',
+    time: '~3.5–4 hrs from Kigali',
+    desc: "One of Africa's Great Lakes, ringed by terraced coffee farms, fishing villages and slow lakeside towns.",
+    tags: ['Boat Cruises', 'Coffee Tours', 'Beaches'],
+    nearby: 'Nearby: Lakeside Eco-Lodge, Kivu Table',
+    photo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Sunrise%20over%20Lake%20Kivu.jpg?width=1600',
+  },
+];
