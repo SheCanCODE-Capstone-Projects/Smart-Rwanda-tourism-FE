@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { ResetPasswordFormState, ResetPasswordErrors, ResetPasswordTouched } from '../../types/auth';
+import { resetPassword } from '../../services/authService';
 
 /**
  * ResetPasswordForm component.
@@ -18,6 +19,7 @@ const ResetPasswordForm = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   /**
    * Validates the password field.
@@ -75,7 +77,7 @@ const ResetPasswordForm = () => {
    * Handles form submission, validates both fields and triggers the reset API call.
    * @param e - The form submit event.
    */
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors = {
       password: validatePassword(form.password),
@@ -84,13 +86,19 @@ const ResetPasswordForm = () => {
     setErrors(newErrors);
     setTouched({ password: true, confirmPassword: true });
     if (newErrors.password || newErrors.confirmPassword) return;
+    if (!token) return;
 
+    setApiError('');
     setIsLoading(true);
-    // TODO: Replace with real API call to POST /api/auth/reset-password with { token, password }
-    setTimeout(() => {
+    try {
+      await resetPassword(token, form.password);
       setIsLoading(false);
       setSuccess(true);
-    }, 2000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to reset password. Please try again.';
+      setApiError(message);
+      setIsLoading(false);
+    }
   };
 
   if (!token) {
@@ -160,6 +168,12 @@ const ResetPasswordForm = () => {
           </div>
         </div>
       ) : (
+        <>
+        {apiError && (
+          <div role="alert" aria-live="assertive" className="mb-5 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {apiError}
+          </div>
+        )}
         <form onSubmit={handleSubmit} noValidate>
           {/* Password field */}
           <div className="mb-5">
@@ -291,6 +305,7 @@ const ResetPasswordForm = () => {
             )}
           </button>
         </form>
+        </>
       )}
 
       {/* Back to login */}

@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { getAuthToken, setSessionUser, clearSession } from '@/hooks/useAuth';
+import { getCurrentUser } from '@/services/authService';
 import HomePage from '@/pages/HomePage';
 import AboutPage from '@/pages/AboutPage';
 import DiscoverPage from '@/pages/DiscoverPage';
@@ -35,6 +38,25 @@ import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import './App.css';
 
 function App() {
+  useEffect(() => {
+    if (!getAuthToken()) return;
+    getCurrentUser()
+      .then((me) => {
+        setSessionUser({
+          id: me.userId,
+          email: me.email ?? '',
+          firstName: me.firstName,
+          lastName: me.lastName,
+          role: me.role,
+        });
+      })
+      .catch(() => {
+        // Token is invalid/expired — drop the stale session rather than leaving
+        // the UI showing a logged-in state that the backend no longer honors.
+        clearSession();
+      });
+  }, []);
+
   return (
     <Routes>
       {/* Public Auth Routes */}

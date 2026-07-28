@@ -1,72 +1,102 @@
+import api from '../lib/axios'
 import type { AuthResponse, LoginRequest, RegisterRequest, ApiError } from '../types/auth'
+import type { AxiosError } from 'axios'
 
-async function handleResponse<T>(res: Response): Promise<T> {
-  if (res.ok) {
-    const text = await res.text()
-    return (text ? JSON.parse(text) : {}) as T
+/** Normalizes an Axios error into the same Error+ApiError shape callers already expect. */
+function toAuthError(err: unknown): Error & { apiError: ApiError } {
+  const axiosErr = err as AxiosError<{ message?: string; error?: string; errors?: Record<string, string>; fieldErrors?: Record<string, string> }>
+  const status = axiosErr.response?.status
+  const body = axiosErr.response?.data
+
+  const apiError: ApiError = {
+    message:
+      body?.message ??
+      body?.error ??
+      (axiosErr.message === 'Network Error'
+        ? 'Unable to reach the server. Please check your connection and try again.'
+        : 'Something went wrong. Please try again.'),
+    errors: body?.errors ?? body?.fieldErrors,
+    status,
   }
 
-  let errorBody: ApiError = { message: 'Something went wrong. Please try again.', status: res.status }
-
-  try {
-    const text = await res.text()
-    if (text) {
-      const json = JSON.parse(text)
-      errorBody = {
-        message: json.message ?? json.error ?? errorBody.message,
-        errors: json.errors ?? json.fieldErrors,
-        status: res.status,
-      }
-    }
-  } catch {
-    // keep default error message
-  }
-
-  const err = new Error(errorBody.message) as Error & { apiError: ApiError }
-  err.apiError = errorBody
-  throw err
+  const wrapped = new Error(apiError.message) as Error & { apiError: ApiError }
+  wrapped.apiError = apiError
+  return wrapped
 }
 
 export async function loginUser(payload: LoginRequest): Promise<AuthResponse> {
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-  return handleResponse<AuthResponse>(res)
+  try {
+    const res = await api.post<AuthResponse>('/api/auth/login', payload)
+    return res.data
+  } catch (err) {
+    throw toAuthError(err)
+  }
 }
 
 export async function registerUser(payload: RegisterRequest): Promise<AuthResponse> {
-  const res = await fetch('/api/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...payload, role: payload.role.toUpperCase() }),
-  })
-  return handleResponse<AuthResponse>(res)
+  try {
+    const res = await api.post<AuthResponse>('/api/auth/register', {
+      ...payload,
+      role: payload.role.toUpperCase(),
+    })
+    return res.data
+  } catch (err) {
+    throw toAuthError(err)
+  }
 }
 
-export async function resetPassword(token: string, password: string): Promise<void> {
-  const res = await fetch(`/api/auth/reset-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, password }),
-  });
+/** Best-effort server-side logout. Local session is always cleared by the caller regardless of outcome. */
+export async function logoutUser(): Promise<void> {
+  try {
+    await api.post('/api/auth/logout')
+  } catch {
+    // Local session clearing must proceed even if the server call fails (e.g. token already expired).
+  }
+}
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data?.message ?? 'Failed to reset password. Please try again.');
+/**
+ * Verifies the stored token against the backend and returns the current user.
+ * Used on app load to restore/validate the session after a refresh instead of
+ * blindly trusting whatever is cached in localStorage.
+ */
+export async function getCurrentUser(): Promise<AuthResponse> {
+  try {
+    const res = await api.get<AuthResponse>('/api/auth/me')
+    return res.data
+  } catch (err) {
+    throw toAuthError(err)
+  }
+}
+
+export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
+  try {
+    const res = await api.post<AuthResponse>('/api/auth/google', { idToken })
+    return res.data
+  } catch (err) {
+    throw toAuthError(err)
+  }
+}
+
+export async function verifyOtp(email: string, otp: string): Promise<void> {
+  try {
+    await api.post('/api/auth/verify-otp', { email, otp })
+  } catch (err) {
+    throw toAuthError(err)
   }
 }
 
 export async function forgotPassword(email: string): Promise<void> {
-  const res = await fetch(`/api/auth/forgot-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  });
+  try {
+    await api.post('/api/auth/forgot-password', { email })
+  } catch (err) {
+    throw toAuthError(err)
+  }
+}
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data?.message ?? 'Failed to send reset email. Please try again.');
+export async function resetPassword(token: string, password: string): Promise<void> {
+  try {
+    await api.post('/api/auth/reset-password', { token, password })
+  } catch (err) {
+    throw toAuthError(err)
   }
 }
