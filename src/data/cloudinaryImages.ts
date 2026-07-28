@@ -15,8 +15,11 @@
 
 export const cloudinaryImages = {
   destinations: {
-    // Kigali city-view photo — matches "Kigali city or homepage city view"
-    kigali: 'https://res.cloudinary.com/gfruu3wa/image/upload/q_auto:best,f_auto/v1784724746/city_view_pb8stw.jpg',
+    // Kigali city-view photo — verified photo of Kigali's Nyamirambo neighborhood
+    // (shot from the top of Nyarugenge District Hospital), by Protais Benjamin
+    // MUGENZI, free to use under the Unsplash License:
+    // https://unsplash.com/photos/a-view-of-a-city-from-the-top-of-a-hill-Mu5wl2HdVh4
+    kigali: 'https://images.unsplash.com/photo-1708772565588-33785e13aa46?auto=format&fit=crop&w=1600&q=80',
     volcanoes: 'https://res.cloudinary.com/gfruu3wa/image/upload/q_auto:best,f_auto/v1784724818/Volcanoes_National_Park_Rwanda_dpil7m.jpg',
     // No dedicated Akagera landscape photo supplied — zebra photo is the closest
     // reliable Akagera match (see providers.akageraSafariCo / experiences.akageraSafari)
