@@ -53,3 +53,20 @@ export interface ApiError {
   errors?: Record<string, string>
   status?: number
 }
+
+// Reset password form types
+
+export interface ResetPasswordFormState {
+  password: string
+  confirmPassword: string
+}
+
+export interface ResetPasswordErrors {
+  password: string
+  confirmPassword: string
+}
+
+export interface ResetPasswordTouched {
+  password: boolean
+  confirmPassword: boolean
+}
