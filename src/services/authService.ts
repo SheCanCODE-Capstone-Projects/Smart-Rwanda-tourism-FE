@@ -1,5 +1,7 @@
 import type { AuthResponse, LoginRequest, RegisterRequest, ApiError } from '../types/auth'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
 async function handleResponse<T>(res: Response): Promise<T> {
   if (res.ok) {
     const text = await res.text()
@@ -28,7 +30,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export async function loginUser(payload: LoginRequest): Promise<AuthResponse> {
-  const res = await fetch('/api/auth/login', {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -37,7 +39,7 @@ export async function loginUser(payload: LoginRequest): Promise<AuthResponse> {
 }
 
 export async function registerUser(payload: RegisterRequest): Promise<AuthResponse> {
-  const res = await fetch('/api/auth/register', {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...payload, role: payload.role.toUpperCase() }),
@@ -46,7 +48,7 @@ export async function registerUser(payload: RegisterRequest): Promise<AuthRespon
 }
 
 export async function resetPassword(token: string, password: string): Promise<void> {
-  const res = await fetch(`/api/auth/reset-password`, {
+  const res = await fetch(`${API_URL}/api/auth/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, password }),
@@ -59,7 +61,7 @@ export async function resetPassword(token: string, password: string): Promise<vo
 }
 
 export async function forgotPassword(email: string): Promise<void> {
-  const res = await fetch(`/api/auth/forgot-password`, {
+  const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
