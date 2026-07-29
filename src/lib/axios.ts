@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL as string || 'http://localhost:8080',
+  baseURL: (import.meta.env.VITE_API_BASE_URL as string) || 'https://smart-rwanda-tourism.up.railway.app',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 })

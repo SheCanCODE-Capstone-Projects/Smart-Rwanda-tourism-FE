@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { UserRole } from '../types/auth'
+import { logoutUser } from '../services/authService'
 
 /**
  * Session helper for the PUBLIC (tourist/provider) authentication flow that lives in
@@ -78,6 +79,9 @@ export function useAuth() {
   }, [])
 
   const logout = useCallback(() => {
+    // Fire-and-forget: clear the local session immediately for a snappy UI,
+    // regardless of whether the server call succeeds.
+    void logoutUser()
     clearSession()
   }, [])
 

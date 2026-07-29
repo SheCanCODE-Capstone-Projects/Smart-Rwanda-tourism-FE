@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BrandLogo from '@/components/auth/BrandLogo';
-interface ForgotPasswordFormState { email: string; isLoading: boolean; successMessage: string; emailError: string; touched: boolean; }
+import { forgotPassword } from '@/services/authService';
+interface ForgotPasswordFormState { email: string; isLoading: boolean; successMessage: string; emailError: string; apiError: string; touched: boolean; }
 
 const ForgotPasswordForm = () => {
   const [state, setState] = useState<ForgotPasswordFormState>({
@@ -9,9 +10,10 @@ const ForgotPasswordForm = () => {
     emailError: '',
     isLoading: false,
     successMessage: '',
+    apiError: '',
     touched: false,
   });
-  const { email, emailError, isLoading, successMessage, touched } = state;
+  const { email, emailError, isLoading, successMessage, apiError, touched } = state;
 
   // Email validation
   const validateEmail = (value: string) => {
@@ -38,20 +40,23 @@ const ForgotPasswordForm = () => {
     setState((prev: ForgotPasswordFormState) => ({ ...prev, touched: true, emailError: validateEmail(prev.email) }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const error = validateEmail(email);
-    setState((prev: ForgotPasswordFormState) => ({ ...prev, emailError: error, touched: true }));
+    setState((prev: ForgotPasswordFormState) => ({ ...prev, emailError: error, apiError: '', touched: true }));
     if (error) return;
     setState((prev: ForgotPasswordFormState) => ({ ...prev, isLoading: true }));
-    // TODO: Replace with real API call to POST /api/auth/forgot-password
-    setTimeout(() => {
+    try {
+      await forgotPassword(email);
       setState((prev: ForgotPasswordFormState) => ({
         ...prev,
         isLoading: false,
         successMessage: 'If an account with this email exists, a password reset link has been sent. Please check your email.',
       }));
-    }, 2000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to send reset email. Please try again.';
+      setState((prev: ForgotPasswordFormState) => ({ ...prev, isLoading: false, apiError: message }));
+    }
   };
 
   return (
@@ -68,6 +73,12 @@ const ForgotPasswordForm = () => {
       <p className="text-center text-muted mb-8 text-sm leading-relaxed">
         Enter your email address and we'll send you a password reset link.
       </p>
+
+      {apiError && !successMessage && (
+        <div role="alert" aria-live="assertive" className="mb-5 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {apiError}
+        </div>
+      )}
 
       {/* Success state */}
       {successMessage ? (
