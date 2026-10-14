@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "dependabot/npm_and_yarn/postcss-8.5.29",
+    "dependabot/npm_and_yarn/vitejs/plugin-react-6.1.2",
+    "feature/login-register",
+    "feature/provider-dashboard",
+    "feature/rwandaways-final-ui",
+    "feature/trip-planner",
+    "main",
+    "origin"
+  ],
+  "parent": {
+    "dependabot/npm_and_yarn/postcss-8.5.29": "main",
+    "dependabot/npm_and_yarn/vitejs/plugin-react-6.1.2": "main",
+    "feature/login-register": "main",
+    "feature/provider-dashboard": "main",
+    "feature/rwandaways-final-ui": "main",
+    "feature/trip-planner": "main",
+    "main": null,
+    "origin": "main"
+  },
+  "order": [
+    "main",
+    "dependabot/npm_and_yarn/postcss-8.5.29",
+    "dependabot/npm_and_yarn/vitejs/plugin-react-6.1.2",
+    "feature/login-register",
+    "feature/provider-dashboard",
+    "feature/rwandaways-final-ui",
+    "feature/trip-planner",
+    "origin"
+  ]
+}
